@@ -1,5 +1,6 @@
 "use client";
 
+import { authClient } from "@/lib/auth-client";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -11,17 +12,28 @@ import {
   FaFolderOpen, 
   FaExclamationTriangle,
   FaCheckCircle,
-  FaBan
+  FaBan,
+  FaPlus
 } from "react-icons/fa";
 
 const MyRequests = () => {
+  const { data } = authClient.useSession();
+  const user = data?.user;
+  const buyerEmail = user?.email;
+
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, id: null });
+  const [notification, setNotification] = useState({ show: false, message: "", type: "" });
 
-  const buyerEmail = "buyer1@gmail.com"; 
+  const showToast = (msg, type) => {
+    setNotification({ show: true, message: msg, type });
+    setTimeout(() => setNotification({ show: false, message: "", type: "" }), 3500);
+  };
 
   useEffect(() => {
+    if (!buyerEmail) return;
+
     fetch(`http://localhost:5000/api/my-requests?email=${buyerEmail}`)
       .then((res) => res.json())
       .then((data) => {
@@ -48,13 +60,24 @@ const MyRequests = () => {
       });
       if (res.ok) {
         setApplications(applications.filter((app) => app._id !== id));
+        showToast("Application request payload terminated.", "success");
+      } else {
+        showToast("Failed to clear application node.", "error");
       }
     } catch (error) {
-      console.error("Failed to terminate validation request node", error);
+      showToast("Ecosystem network connection timeout.", "error");
     } finally {
       setDeleteModal({ isOpen: false, id: null });
     }
   };
+
+  if (!buyerEmail && !loading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[50vh]">
+        <p className="text-[10px] font-black uppercase tracking-widest text-rose-500">Authentication Required: Please Login to View Logs</p>
+      </div>
+    );
+  }
 
   if (loading) {
     return (
@@ -68,6 +91,24 @@ const MyRequests = () => {
   return (
     <div className="w-full space-y-8 relative">
       
+      <AnimatePresence>
+        {notification.show && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20, scale: 0.9, x: "-50%" }}
+            animate={{ opacity: 1, y: 0, scale: 1, x: "-50%" }}
+            exit={{ opacity: 0, y: -20, scale: 0.9, x: "-50%" }}
+            className={`fixed top-24 left-1/2 z-50 px-6 py-4 rounded-2xl shadow-2xl border text-xs font-black uppercase tracking-widest flex items-center gap-3 backdrop-blur-3xl min-w-[320px] ${
+              notification.type === "success" 
+                ? "bg-slate-950/90 text-emerald-400 border-emerald-500/30 shadow-emerald-500/10" 
+                : "bg-slate-950/90 text-rose-500 border-rose-500/30 shadow-rose-500/10"
+            }`}
+          >
+            {notification.type === "success" ? <FaCheckCircle className="text-sm" /> : <FaExclamationTriangle className="text-sm" />}
+            <span className="text-slate-300 normal-case font-medium">{notification.message}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <AnimatePresence>
         {deleteModal.isOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
@@ -114,7 +155,7 @@ const MyRequests = () => {
         )}
       </AnimatePresence>
 
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-white/5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/5">
         <div>
           <h1 className="text-2xl font-black text-white tracking-tight uppercase flex items-center gap-3">
             <FaFolderOpen className="text-emerald-400 text-xl" />
@@ -127,6 +168,16 @@ const MyRequests = () => {
             Track validation metrics, lifecycle intervals, and deployment schedules
           </p>
         </div>
+
+        <Link href="/all-pets" className="shrink-0">
+          <motion.button 
+            whileHover={{ scale: 1.02, boxShadow: "0 0 20px rgba(52, 211, 153, 0.3)" }}
+            whileTap={{ scale: 0.98 }}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-500 text-slate-950 text-xs font-black uppercase tracking-wider shadow-lg cursor-pointer"
+          >
+            <FaPlus className="text-[10px]" /> New Application
+          </motion.button>
+        </Link>
       </div>
 
       {applications.length === 0 ? (
