@@ -34,7 +34,7 @@ const MyRequests = () => {
   useEffect(() => {
     if (!buyerEmail) return;
 
-    fetch(`http://localhost:5000/api/my-requests?email=${buyerEmail}`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/my-requests?email=${buyerEmail}`)
       .then((res) => res.json())
       .then((data) => {
         setApplications(Array.isArray(data) ? data : []);
@@ -55,7 +55,7 @@ const MyRequests = () => {
     if (!id) return;
 
     try {
-      const res = await fetch(`http://localhost:5000/api/requests/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/requests/${id}`, {
         method: "DELETE",
       });
       if (res.ok) {

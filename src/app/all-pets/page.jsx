@@ -16,20 +16,20 @@ const AllPetsPage = () => {
   };
 
   useEffect(() => {
-    const fetchPets = async () => {
-      try {
-        const res = await fetch("http://localhost:5000/api/pets", {
-          cache: "no-store",
-          method: "GET",
-        });
-        if (res.ok) {
-          const data = await res.json();
-          setPets(Array.isArray(data) ? data : []);
-        }
-      } catch (error) {
-        console.error("Error fetching pets:", error);
-      }
-    };
+   const fetchPets = async () => {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/pets`, {
+      cache: "no-store",
+      method: "GET",
+    });
+    if (res.ok) {
+      const data = await res.json();
+      setPets(Array.isArray(data) ? data : []);
+    }
+  } catch (error) {
+    console.error("Error fetching pets:", error);
+  }
+};
     fetchPets();
   }, []);
 

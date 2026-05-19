@@ -7,7 +7,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { 
   FaPlusCircle, 
   FaTerminal, 
-  FaDatabase, 
   FaShieldAlt, 
   FaExclamationTriangle, 
   FaCheckCircle 
@@ -44,7 +43,7 @@ const AddPetPage = () => {
     petData.adoptionFee = Number(petData.adoptionFee);
 
     try {
-      const res = await fetch("http://localhost:5000/api/pets", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/pets`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -64,7 +63,7 @@ const AddPetPage = () => {
       }
     } catch (error) {
       showNotification("Ecosystem pipeline error. Connection timeout.", "error");
-    } finally {
+    } fileyl {
       setLoading(false);
     }
   };

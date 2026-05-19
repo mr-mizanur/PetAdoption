@@ -39,9 +39,9 @@ const MyListings = () => {
     if (!ownerEmail) return;
     try {
       const [listingsRes, requestsRes, statsRes] = await Promise.all([
-        fetch(`http://localhost:5000/api/my-listings?email=${ownerEmail}`),
-        fetch(`http://localhost:5000/api/owner-requests?email=${ownerEmail}`),
-        fetch(`http://localhost:5000/api/owner-stats?email=${ownerEmail}`)
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/my-listings?email=${ownerEmail}`),
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/owner-requests?email=${ownerEmail}`),
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/owner-stats?email=${ownerEmail}`)
       ]);
 
       const dataListings = await listingsRes.json();
@@ -71,7 +71,7 @@ const MyListings = () => {
 
   const handleApprove = async (reqId) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/requests/approve/${reqId}`, { method: "PATCH" });
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/requests/approve/${reqId}`, { method: "PATCH" });
       if (res.ok) {
         showToast("Adoption application verified & deployed successfully! 🎉", "success");
         setShowRequestsModal(false);
@@ -84,7 +84,7 @@ const MyListings = () => {
 
   const handleReject = async (reqId) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/requests/reject/${reqId}`, { method: "PATCH" });
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/requests/reject/${reqId}`, { method: "PATCH" });
       if (res.ok) {
         showToast("Application stream rejected successfully.", "success");
         setShowRequestsModal(false);
@@ -104,7 +104,7 @@ const MyListings = () => {
     if (!petId) return;
 
     try {
-      const res = await fetch(`http://localhost:5000/api/pets/${petId}`, { method: "DELETE" });
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/pets/${petId}`, { method: "DELETE" });
       if (res.ok) {
         setPets(pets.filter(p => p._id !== petId));
         showToast("Listing record purged from global engine.", "success");
