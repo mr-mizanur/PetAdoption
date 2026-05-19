@@ -3,13 +3,13 @@ import AdoptionFrom from "@/components/AdoptionFrom";
 const PetDetailsPage = async ({ params }) => {
   const { id } = await params;
   
-  // ১. URL ঠিক করা হলো (/api/pets/${id}) এবং ক্যাশ রিলিজের জন্য no-store দেওয়া হলো
+ 
   const res = await fetch(`http://localhost:5000/api/pets/${id}`, {
     method: "GET",
     cache: "no-store", 
   });
 
-  // সার্ভার এরর দিলে তা হ্যান্ডেল করার সেফটি চেক
+
   if (!res.ok) {
     return (
       <div className="min-h-screen pt-36 text-center text-red-500 font-semibold">
