@@ -15,7 +15,7 @@ import {
 } from "react-icons/fa";
 
 const BannerPage = () => {
-  // স্ট্যাগারড অ্যানিমেশন ভেরিয়েন্টস
+
   const containerVariants = {
     hidden: { opacity: 0 },
     show: {
@@ -41,7 +41,7 @@ const BannerPage = () => {
   return (
     <section className="relative overflow-hidden bg-slate-950 min-h-[90vh] flex items-center justify-center pt-20 pb-16">
       
-      {/* গ্লোবাল সাইবার গ্রিড ও নিওন এনার্জি ব্যাকগ্রাউন্ড */}
+
       <div className="absolute inset-0 -z-10 pointer-events-none">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#0f172a_1px,transparent_1px),linear-gradient(to_bottom,#0f172a_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-30" />
         <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-emerald-500/10 blur-[160px] rounded-full" />
@@ -50,14 +50,14 @@ const BannerPage = () => {
 
       <div className="w-full mx-auto grid lg:grid-cols-12 gap-12 items-center">
         
-        {/* বাম পাশ: কন্টেন্ট আর্কিটেকচার (৫ কলাম স্পেস) */}
+  
         <motion.div 
           variants={containerVariants}
           initial="hidden"
           animate="show"
           className="lg:col-span-7 space-y-8 text-center lg:text-left z-10"
         >
-          {/* গ্লোয়িং ব্যাজ */}
+        
           <motion.div variants={badgeVariants} className="inline-flex">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-emerald-500/30 bg-emerald-950/40 backdrop-blur-md shadow-[0_0_20px_rgba(52,211,153,0.1)]">
               <span className="flex h-2 w-2 relative">
@@ -70,7 +70,7 @@ const BannerPage = () => {
             </div>
           </motion.div>
 
-          {/* বোল্ড নিওন মেইন টাইটেল */}
+
           <motion.h1 
             variants={itemVariants}
             className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white leading-[1.05]"
@@ -81,7 +81,7 @@ const BannerPage = () => {
             </span>
           </motion.h1>
 
-          {/* প্রফেশনাল মেসেজিং ডেসক্রিপশন */}
+        
           <motion.p 
             variants={itemVariants}
             className="text-slate-400 text-base sm:text-lg max-w-xl mx-auto lg:mx-0 font-medium leading-relaxed"
@@ -89,7 +89,7 @@ const BannerPage = () => {
             Explore verified listings. Make lifelong connections. Our immutable safety standard ensures premium veterinary clearance and seamless legal ownership transitions.
           </motion.p>
 
-          {/* হাই-কনট্রাস্ট অ্যাকশন ট্রিগার */}
+    
           <motion.div 
             variants={itemVariants}
             className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
@@ -116,13 +116,13 @@ const BannerPage = () => {
           </motion.div>
         </motion.div>
 
-        {/* ডান পাশ: নিও-গ্লো ম্যাট্রিক্স লেআউট উইথ ইমেজ (৫ কলাম স্পেস) */}
+       
         <div className="lg:col-span-5 relative flex items-center justify-center min-h-[450px]">
           
-          {/* গ্লাসমরফিক ডাটা নোড নেটওয়ার্ক গ্রিড */}
+         
           <div className="relative w-full max-w-[420px] aspect-square rounded-[40px] border border-white/10 bg-slate-900/30 backdrop-blur-2xl p-6 flex items-center justify-center shadow-2xl group hover:border-emerald-500/30 transition-colors duration-500">
             
-            {/* মেইন ইমেজ নোড */}
+         
             <motion.div 
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -139,7 +139,7 @@ const BannerPage = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-90" />
             </motion.div>
 
-            {/* মাইক্রো কার্ড ১: ভেরিফাইড স্ট্যাটাস (টপ-লেফট) */}
+           
             <motion.div 
               animate={{ y: [0, -10, 0] }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
@@ -154,7 +154,7 @@ const BannerPage = () => {
               </div>
             </motion.div>
 
-            {/* মাইক্রো কার্ড ২: মেডিকেল ক্লিয়ারেন্স (টপ-রাইট) */}
+          
             <motion.div 
               animate={{ y: [0, 10, 0] }}
               transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
@@ -169,7 +169,7 @@ const BannerPage = () => {
               </div>
             </motion.div>
 
-            {/* মাইক্রো কার্ড ৩: ম্যাচ রেট পারফরম্যান্স (মিড-রাইট) */}
+   
             <motion.div 
               animate={{ x: [0, 8, 0] }}
               transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
@@ -184,7 +184,7 @@ const BannerPage = () => {
               </div>
             </motion.div>
 
-            {/* মাইক্রো কার্ড ৪: গ্লোবাল অ্যাডোপশন ইমপ্যাক্ট (বটম-রাইট) */}
+            
             <motion.div 
               animate={{ y: [0, 8, 0] }}
               transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
@@ -199,7 +199,7 @@ const BannerPage = () => {
               </div>
             </motion.div>
 
-            {/* মাইক্রো কার্ড ৫: হার্ট ইন্টিগ্রেশন (বটম-লেফট) */}
+          
             <motion.div 
               animate={{ scale: [1, 1.05, 1] }}
               transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
