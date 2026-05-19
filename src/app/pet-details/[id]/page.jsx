@@ -1,19 +1,30 @@
+import React from "react";
+import Image from "next/image";
+import { 
+  FaDna, 
+  FaHourglassHalf, 
+  FaVenusMars, 
+  FaHeartbeat, 
+  FaShieldVirus, 
+  FaMapMarkerAlt, 
+  FaDollarSign, 
+  FaEnvelope, 
+  FaTerminal 
+} from "react-icons/fa";
 import AdoptionFrom from "@/components/AdoptionFrom";
 
 const PetDetailsPage = async ({ params }) => {
   const { id } = await params;
   
- 
   const res = await fetch(`http://localhost:5000/api/pets/${id}`, {
     method: "GET",
     cache: "no-store", 
   });
 
-
   if (!res.ok) {
     return (
-      <div className="min-h-screen pt-36 text-center text-red-500 font-semibold">
-        Pet details not found or Server error!
+      <div className="min-h-screen flex items-center justify-center bg-slate-950 text-rose-500 font-bold uppercase tracking-widest text-xs border border-rose-500/10">
+        Fatal: Companion Diagnostics Not Found
       </div>
     );
   }
@@ -21,82 +32,87 @@ const PetDetailsPage = async ({ params }) => {
   const pet = await res.json();
 
   return (
-    <div className="min-h-screen pb-32 bg-gray-100 pt-36 py-10 px-5">
-      <div className="container px-6 mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 bg-white rounded-3xl shadow-lg overflow-hidden">
-          <div className="h-112.5 overflow-hidden">
-            {/* ২. imageUrl পরিবর্তন করে ডাটাবেজের সঠিক ফিল্ড pet.image দেওয়া হলো */}
-            <img
+    <div className="min-h-screen bg-slate-950 pt-28 pb-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-emerald-500/5 blur-[160px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-cyan-500/5 blur-[160px] rounded-full pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 relative z-10">
+        
+        <div className="lg:col-span-8 bg-slate-900/40 backdrop-blur-2xl border border-white/5 rounded-3xl overflow-hidden shadow-2xl flex flex-col">
+          
+          <div className="relative h-[450px] w-full bg-slate-950 border-b border-white/5">
+            <Image
               src={pet.image} 
               alt={pet.name}
-              className="w-full h-full object-cover"
+              fill
+              className="object-cover object-center opacity-85"
+              priority
             />
-          </div>
-
-          <div className="p-8">
-            <div className="flex items-center justify-between mb-6">
-              <h1 className="text-4xl font-bold">{pet.name}</h1>
-
-              <span className="bg-black text-white px-4 py-2 rounded-full text-sm">
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent" />
+            
+            <div className="absolute bottom-6 left-8 flex items-center gap-4">
+              <span className="bg-emerald-500 text-slate-950 px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-widest shadow-lg">
                 {pet.species}
               </span>
             </div>
+          </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <div>
-                <h3 className="font-semibold text-gray-800">Breed</h3>
-                <p className="text-gray-600">{pet.breed}</p>
-              </div>
-
-              <div>
-                <h3 className="font-semibold text-gray-800">Age</h3>
-                <p className="text-gray-600">{pet.age} Years</p>
-              </div>
-
-              <div>
-                <h3 className="font-semibold text-gray-800">Gender</h3>
-                <p className="text-gray-600">{pet.gender}</p>
-              </div>
-
-              <div>
-                <h3 className="font-semibold text-gray-800">Health Status</h3>
-                <p className="text-gray-600">{pet.healthStatus}</p>
-              </div>
-
-              <div>
-                <h3 className="font-semibold text-gray-800">
-                  Vaccination Status
-                </h3>
-                <p className="text-gray-600">{pet.vaccinationStatus}</p>
-              </div>
-
-              <div>
-                <h3 className="font-semibold text-gray-800">Location</h3>
-                <p className="text-gray-600">{pet.location}</p>
-              </div>
-
-              <div>
-                <h3 className="font-semibold text-gray-800">Adoption Fee</h3>
-                <p className="text-2xl font-bold">${pet.adoptionFee}</p>
-              </div>
-
-              <div>
-                <h3 className="font-semibold text-gray-800">Owner Email</h3>
-                <p className="text-gray-600">{pet.ownerEmail}</p>
+          <div className="p-8 flex-grow flex flex-col space-y-8">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/5">
+              <h1 className="text-4xl font-black text-white tracking-tight">{pet.name}</h1>
+              <div className="flex items-center bg-slate-950 border border-white/5 px-4 py-2.5 rounded-xl gap-2 shadow-inner">
+                <FaDollarSign className="text-emerald-400 text-sm" />
+                <span className="text-2xl font-black text-white">{pet.adoptionFee}</span>
+                <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wider ml-1">Asset Value</span>
               </div>
             </div>
 
-            <div className="mt-8">
-              <h3 className="font-semibold text-gray-800 text-xl mb-2">
-                Description
-              </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {[
+                { icon: <FaDna />, label: "Genetic Breed", value: pet.breed },
+                { icon: <FaHourglassHalf />, label: "Age Metric", value: `${pet.age} Earth Years` },
+                { icon: <FaVenusMars />, label: "Gender Node", value: pet.gender },
+                { icon: <FaHeartbeat />, label: "Vital Health Status", value: pet.healthStatus },
+                { icon: <FaShieldVirus />, label: "Biosecurity Immunization", value: pet.vaccinationStatus },
+                { icon: <FaMapMarkerAlt />, label: "Grid Coordinates", value: pet.location },
+              ].map((item, index) => (
+                <div key={index} className="flex items-center gap-4 p-4 bg-slate-950/60 border border-white/5 rounded-xl group hover:border-emerald-500/20 transition-colors">
+                  <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center text-slate-400 group-hover:text-emerald-400 transition-colors shrink-0">
+                    {item.icon}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[10px] uppercase font-bold tracking-widest text-slate-500">{item.label}</p>
+                    <p className="text-sm font-extrabold text-slate-200 mt-0.5 truncate">{item.value}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
 
-              <p className="text-gray-600 leading-relaxed">{pet.description}</p>
+            <div className="p-4 bg-slate-950/40 border border-white/5 rounded-xl flex items-center gap-4">
+              <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center text-slate-400 shrink-0">
+                <FaEnvelope />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-[10px] uppercase font-bold tracking-widest text-slate-500">Custodian Registry Email</p>
+                <p className="text-sm font-bold text-slate-300 mt-0.5 truncate">{pet.ownerEmail}</p>
+              </div>
+            </div>
+
+            <div className="pt-4 border-t border-white/5">
+              <h3 className="text-xs font-black uppercase tracking-widest text-white mb-3 flex items-center gap-2">
+                <FaTerminal className="text-emerald-400" /> Behavioral Log Summary
+              </h3>
+              <p className="text-slate-400 text-sm leading-relaxed font-medium bg-slate-950/40 p-5 rounded-xl border border-white/5">
+                {pet.description}
+              </p>
             </div>
           </div>
         </div>
 
-        <AdoptionFrom pet={pet} />
+        <div className="lg:col-span-4 lg:sticky lg:top-24 h-fit">
+          <AdoptionFrom pet={pet} />
+        </div>
+
       </div>
     </div>
   );

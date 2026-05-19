@@ -1,124 +1,213 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { FaEye, FaSearch } from "react-icons/fa";
+import { motion, AnimatePresence } from "framer-motion";
+import { FaEye, FaPaw, FaCheckCircle, FaMapMarkerAlt, FaSearch } from "react-icons/fa";
 
-// সার্ভার কম্পোনেন্টে ডাটা ফেচিং ফাংশন
-async function getPets() {
-  try {
-    const res = await fetch("http://localhost:5000/api/pets", {
-      cache: "no-store", // রাউট রিলোড ইস্যু ও ক্যাশিং এড়াতে
-      method: "GET",
-    });
+const AllPetsPage = () => {
+  const [pets, setPets] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
-    // রেসপন্স যদি সাকসেসফুল (200-299) না হয়
-    if (!res.ok) {
-      console.error(`Server responded with status: ${res.status}`);
-      return [];
+  const user = {
+    email: "buyer1@gmail.com",
+    isLoggedIn: true,
+  };
+
+  useEffect(() => {
+    const fetchPets = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/pets", {
+          cache: "no-store",
+          method: "GET",
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setPets(Array.isArray(data) ? data : []);
+        }
+      } catch (error) {
+        console.error("Error fetching pets:", error);
+      }
+    };
+    fetchPets();
+  }, []);
+
+  const filteredPets = pets.filter((pet) => {
+    const query = searchQuery.toLowerCase();
+    return (
+      pet.name?.toLowerCase().includes(query) ||
+      pet.species?.toLowerCase().includes(query) ||
+      pet.breed?.toLowerCase().includes(query) ||
+      pet.location?.toLowerCase().includes(query)
+    );
+  });
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: { staggerChildren: 0.08 }
     }
+  };
 
-    // রেসপন্সের টাইপ JSON কিনা নিশ্চিত হওয়া
-    const contentType = res.headers.get("content-type");
-    if (!contentType || !contentType.includes("application/json")) {
-      console.error("Received non-JSON response from server");
-      return [];
+  const cardVariants = {
+    hidden: { opacity: 0, y: 30 },
+    show: { 
+      opacity: 1, 
+      y: 0, 
+      transition: { type: "spring", stiffness: 80, damping: 15 } 
     }
-
-    return await res.json();
-  } catch (error) {
-    // নেটওয়ার্ক ডাউন বা সার্ভার বন্ধ থাকলে ক্র্যাশ না করে কনসোলে দেখাবে
-    console.error("Network error or server is down:", error);
-    return [];
-  }
-}
-
-const AllPetsPage = async () => {
-  const pets = await getPets();
+  };
 
   return (
-    <section className="mt-24 px-6 py-10 max-w-7xl mx-auto min-h-screen">
-      {/* Header & Search UI Area */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-12 border-b border-gray-100 pb-6">
-        <div>
-          <h1 className="text-4xl font-black text-gray-900">All Available Pets 🐾</h1>
-          <p className="text-gray-500 mt-1">Discover all furry and feathered friends ready for a home.</p>
+    <div className="min-h-screen bg-slate-950 pt-28 pb-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-[radial-gradient(circle_at_center,rgba(52,211,153,0.05)_0,transparent_70%)] pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto mb-16 space-y-6 relative z-10">
+        <div className="text-center md:text-left">
+          <h1 className="text-3xl md:text-5xl font-black text-white tracking-tight">
+            Global{" "}
+            <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+              Registry Database
+            </span>
+          </h1>
+          <p className="text-slate-400 text-sm font-medium tracking-wide mt-2">
+            Search and verify comprehensive biosecurity profiles of ecosystem companions
+          </p>
         </div>
-        
-        {/* Search & Filter Controls Placeholder for Challenge */}
-        <div className="flex flex-wrap gap-3 items-center">
-          <div className="relative">
-            <input 
-              type="text" 
-              placeholder="Search by name..." 
-              className="pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-black w-64 transition"
+
+        <div className="relative max-w-2xl w-full group">
+          <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 blur-xl rounded-2xl opacity-0 group-focus-within:opacity-100 transition-opacity duration-500" />
+          <div className="relative flex items-center bg-slate-900/50 backdrop-blur-xl border border-white/5 group-focus-within:border-emerald-500/30 rounded-2xl overflow-hidden transition-all duration-300">
+            <div className="pl-5 text-slate-500 group-focus-within:text-emerald-400 transition-colors">
+              <FaSearch className="text-base" />
+            </div>
+            <input
+              type="text"
+              placeholder="Search by name, species, breed, or location node..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full px-4 py-4.5 bg-transparent text-white text-sm placeholder-slate-600 focus:outline-none"
             />
-            <FaSearch className="absolute left-3.5 top-3.5 text-gray-400 text-xs" />
           </div>
-          <select className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none bg-white focus:ring-2 focus:ring-black transition">
-            <option value="">All Species</option>
-            <option value="Dog">Dogs</option>
-            <option value="Cat">Cats</option>
-            <option value="Bird">Birds</option>
-          </select>
         </div>
       </div>
 
-      {/* Fallback Condition: সার্ভার ডাটা না দিলে বা খালি থাকলে রিক্রুটার-ফ্রেন্ডলি UI */}
-      {pets.length === 0 ? (
-        <div className="text-center py-20 bg-white rounded-3xl border border-gray-100 shadow-xs">
-          <p className="text-gray-400 text-lg font-medium">No pets found or unable to connect to the server.</p>
-          <p className="text-gray-400 text-sm mt-1">Please ensure your backend server is running on port 5000.</p>
-        </div>
-      ) : (
-        /* Pet Grid Layout */
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {pets.map((pet) => (
-            <div
-              key={pet._id}
-              className="group bg-white rounded-3xl overflow-hidden shadow-xs hover:shadow-xl transition duration-300 border border-gray-100 flex flex-col justify-between"
-            >
-              <div>
-                <div className="h-64 overflow-hidden relative bg-gray-50">
-                  {pet.image ? (
-                    <Image
-                      src={pet.image}
-                      alt={pet.name || "Pet"}
-                      width={500}
-                      height={500}
-                      className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-                      unoptimized // যদি এক্সটার্নাল ইমেজ হোস্ট (imgbb) নেক্সট কনফিগে সেট করা না থাকে
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-300">No Image</div>
-                  )}
-                  <span className="absolute top-4 left-4 bg-white/95 backdrop-blur-xs text-gray-900 px-3 py-1 rounded-full text-xs font-bold shadow-xs">
-                    {pet.species}
-                  </span>
-                  <span className="absolute top-4 right-4 bg-gray-900 text-white px-3 py-1 rounded-full text-xs font-bold shadow-xs">
-                    ${pet.adoptionFee}
-                  </span>
-                </div>
+      <div className="max-w-7xl mx-auto relative z-10">
+        {filteredPets.length === 0 ? (
+          <div className="text-center py-24 bg-slate-900/20 border border-dashed border-white/5 rounded-3xl">
+            <p className="text-slate-500 text-sm font-bold uppercase tracking-widest">No Active Nodes Matches Search Parameters</p>
+          </div>
+        ) : (
+          <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            animate="show"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          >
+            <AnimatePresence mode="popLayout">
+              {filteredPets.map((pet) => {
+                const isOwner = user.isLoggedIn && pet.ownerEmail === user.email;
+                const isAdopted = pet.status === "adopted";
+                
+                let adoptLink = `/pet-details/${pet._id}`;
+                if (!user.isLoggedIn) {
+                  adoptLink = `/login?redirect=/pet-details/${pet._id}`;
+                }
 
-                <div className="p-6 space-y-2">
-                  <h2 className="text-2xl font-bold text-gray-900">{pet.name}</h2>
-                  <p className="text-sm text-gray-600"><span className="font-semibold text-gray-900">Breed:</span> {pet.breed}</p>
-                  <p className="text-sm text-gray-600"><span className="font-semibold text-gray-900">Location:</span> {pet.location}</p>
-                </div>
-              </div>
+                return (
+                  <motion.div
+                    key={pet._id}
+                    variants={cardVariants}
+                    layout
+                    whileHover={{ y: -6 }}
+                    className="group relative bg-slate-900/40 backdrop-blur-xl rounded-2xl overflow-hidden border border-white/5 hover:border-emerald-500/20 shadow-2xl transition-all duration-300 flex flex-col"
+                  >
+                    <div className="h-64 overflow-hidden relative bg-slate-950">
+                      <Image
+                        src={pet.image}
+                        alt={pet.name}
+                        width={500}
+                        height={500}
+                        className="w-full h-full object-cover group-hover:scale-105 opacity-80 group-hover:opacity-100 transition-all duration-500"
+                        priority
+                      />
 
-              <div className="p-6 pt-0 mt-4">
-                <Link href={`/pet-details/${pet._id}`} className="w-full">
-                  <button className="w-full py-3 rounded-xl border border-gray-200 text-gray-700 font-bold hover:bg-gray-50 active:scale-[0.99] transition flex items-center justify-center gap-2 cursor-pointer">
-                    <FaEye />
-                    View Details
-                  </button>
-                </Link>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </section>
+                      <div className="absolute top-4 left-4 bg-slate-950/80 backdrop-blur-md border border-white/10 px-3 py-1 rounded-lg text-[10px] font-extrabold uppercase tracking-widest text-emerald-400 shadow-md">
+                        {pet.species}
+                      </div>
+
+                      <div className="absolute top-4 right-4 bg-emerald-500 text-slate-950 font-black px-3 py-1 rounded-lg text-xs shadow-lg">
+                        ${pet.adoptionFee}
+                      </div>
+
+                      {isAdopted && (
+                        <div className="absolute inset-0 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center">
+                          <span className="bg-slate-900/90 border border-emerald-500/30 text-emerald-400 px-4 py-2 rounded-xl font-bold text-xs tracking-widest uppercase flex items-center gap-2 shadow-[0_0_20px_rgba(52,211,153,0.15)]">
+                            <FaCheckCircle className="text-emerald-400 text-sm" /> Adopted
+                          </span>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="p-6 flex flex-col flex-grow space-y-4">
+                      <div className="flex justify-between items-start">
+                        <h3 className="text-xl font-extrabold text-white tracking-tight group-hover:text-emerald-400 transition-colors">
+                          {pet.name}
+                        </h3>
+                        <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-white/5 text-slate-400 border border-white/5">
+                          {pet.breed}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-2 text-slate-400 text-xs">
+                        <FaMapMarkerAlt className="text-emerald-500 text-xs shrink-0" />
+                        <span className="truncate">{pet.location}</span>
+                      </div>
+
+                      <div className="pt-2 mt-auto flex gap-3">
+                        <Link href={`/pet-details/${pet._id}`} className="w-full">
+                          <button className="w-full py-3 rounded-xl border border-white/10 bg-white/5 text-slate-200 text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-all flex items-center justify-center gap-2 cursor-pointer">
+                            <FaEye className="text-sm" /> Details
+                          </button>
+                        </Link>
+
+                        {isAdopted ? (
+                          <button
+                            disabled
+                            className="w-full py-3 rounded-xl bg-slate-950 text-slate-600 border border-white/5 text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 cursor-not-allowed"
+                          >
+                            <FaCheckCircle /> Adopted
+                          </button>
+                        ) : isOwner ? (
+                          <button
+                            disabled
+                            className="w-full py-3 rounded-xl bg-slate-950/50 border border-dashed border-white/10 text-slate-500 text-[10px] font-bold uppercase tracking-widest flex items-center justify-center cursor-not-allowed"
+                          >
+                            Your Listing
+                          </button>
+                        ) : (
+                          <Link href={adoptLink} className="w-full">
+                            <motion.button
+                              whileHover={{ scale: 1.02, boxShadow: "0 0 20px rgba(52, 211, 153, 0.4)" }}
+                              whileTap={{ scale: 0.98 }}
+                              className="w-full py-3 rounded-xl bg-emerald-500 text-slate-950 text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-lg"
+                            >
+                              <FaPaw className="text-sm" /> Adopt Now
+                            </motion.button>
+                          </Link>
+                        )}
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </AnimatePresence>
+          </motion.div>
+        )}
+      </div>
+    </div>
   );
 };
 
