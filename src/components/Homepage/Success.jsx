@@ -1,76 +1,139 @@
+"use client";
+
 import Image from "next/image";
 import React from "react";
+import { motion } from "framer-motion";
+import { FaQuoteLeft } from "react-icons/fa";
 
 const SuccessStories = () => {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: { staggerChildren: 0.15 }
+    }
+  };
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 40 },
+    show: { 
+      opacity: 1, 
+      y: 0, 
+      transition: { type: "spring", stiffness: 60, damping: 14 } 
+    }
+  };
+
   return (
-    <section className="mt-10 px-6 py-20 bg-white">
-      <div className="text-center mb-16">
-        <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900">
-          Success Stories ❤️
+    <section className="py-20 relative overflow-hidden w-full">
+      <div className="absolute top-0 right-10 w-96 h-96 bg-cyan-500/5 blur-[150px] rounded-full pointer-events-none" />
+
+      <div className="text-center mb-16 space-y-3">
+        <h2 className="text-3xl md:text-5xl font-black text-white tracking-tight">
+          Validation{" "}
+          <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+            Network
+          </span>
         </h2>
-        <p className="text-gray-500 mt-3 text-lg">
-          Real happy families with their adopted pets
+        <p className="text-slate-400 text-sm font-medium tracking-wide max-w-sm mx-auto">
+          Verified system transitions documented by global sanctuary handlers
         </p>
+        <div className="w-12 h-1 bg-gradient-to-r from-emerald-500 to-cyan-500 mx-auto rounded-full shadow-[0_0_10px_rgba(52,211,153,0.5)]" />
       </div>
 
-      <div className="container mx-auto grid md:grid-cols-3 gap-10">
-        <div className="bg-gray-50 rounded-3xl p-8 border border-gray-100 shadow-sm hover:shadow-xl transition">
+      <motion.div 
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, margin: "-100px" }}
+        className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8"
+      >
+        <motion.div
+          variants={cardVariants}
+          whileHover={{ y: -6, borderColor: "rgba(52, 211, 153, 0.2)" }}
+          className="group relative p-8 bg-slate-900/40 backdrop-blur-xl border border-white/5 rounded-2xl shadow-2xl flex flex-col transition-all duration-300"
+        >
+          <div className="absolute top-6 right-6 text-emerald-500/10 group-hover:text-emerald-400/20 text-3xl transition-colors">
+            <FaQuoteLeft />
+          </div>
+
           <div className="flex items-center gap-4">
-            <img
-              src="https://i.pravatar.cc/100?img=5"
-              className="w-14 h-14 rounded-full"
-            />
+            <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-white/10 group-hover:border-emerald-500/40 transition-colors">
+              <Image
+                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150"
+                alt="Handler 01"
+                fill
+                className="object-cover"
+              />
+            </div>
             <div>
-              <h4 className="font-bold text-gray-900">Ayesha Rahman</h4>
-              <p className="text-sm text-gray-500">Dhaka</p>
+              <h4 className="font-extrabold text-white tracking-tight group-hover:text-emerald-400 transition-colors">Elena Vance</h4>
+              <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mt-0.5">Sanctuary Alpha</p>
             </div>
           </div>
 
-          <p className="mt-5 text-gray-600 text-sm leading-relaxed">
-            “Adopting Luna changed my life. She brings joy every single day.
-            Thank you PrittyCats!”
+          <p className="mt-6 text-slate-400 text-sm leading-relaxed italic">
+            "The integration matrix is flawless. Onboarding Milo through the verified metrics cleared all diagnostic bottlenecks instantly. Exceptional pipeline execution."
           </p>
-        </div>
+        </motion.div>
 
-        <div className="bg-gray-50 rounded-3xl p-8 border border-gray-100 shadow-sm hover:shadow-xl transition">
+        <motion.div
+          variants={cardVariants}
+          whileHover={{ y: -6, borderColor: "rgba(45, 212, 191, 0.2)" }}
+          className="group relative p-8 bg-slate-900/40 backdrop-blur-xl border border-white/5 rounded-2xl shadow-2xl flex flex-col transition-all duration-300"
+        >
+          <div className="absolute top-6 right-6 text-teal-500/10 group-hover:text-teal-400/20 text-3xl transition-colors">
+            <FaQuoteLeft />
+          </div>
+
           <div className="flex items-center gap-4">
-            <Image
-              src="https://i.pravatar.cc/100?img=12"
-              alt="avatar"
-              width={56}
-              height={56}
-              className="rounded-full"
-            />
+            <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-white/10 group-hover:border-teal-500/40 transition-colors">
+              <Image
+                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150"
+                alt="Handler 02"
+                fill
+                className="object-cover"
+              />
+            </div>
             <div>
-              <h4 className="font-bold text-gray-900">Tanvir Hasan</h4>
-              <p className="text-sm text-gray-500">Gazipur</p>
+              <h4 className="font-extrabold text-white tracking-tight group-hover:text-teal-400 transition-colors">Marcus Brody</h4>
+              <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mt-0.5">Core Vector Node</p>
             </div>
           </div>
 
-          <p className="mt-5 text-gray-600 text-sm leading-relaxed">
-            “Max is not just a pet, he is part of my family now. Amazing
-            adoption experience.”
+          <p className="mt-6 text-slate-400 text-sm leading-relaxed italic">
+            "Bypassing legacy documentation hurdles made ownership transfer completely transparent. Zero communication lag. Highly recommended framework."
           </p>
-        </div>
+        </motion.div>
 
-        <div className="bg-gray-50 rounded-3xl p-8 border border-gray-100 shadow-sm hover:shadow-xl transition">
+        <motion.div
+          variants={cardVariants}
+          whileHover={{ y: -6, borderColor: "rgba(34, 211, 238, 0.2)" }}
+          className="group relative p-8 bg-slate-900/40 backdrop-blur-xl border border-white/5 rounded-2xl shadow-2xl flex flex-col transition-all duration-300"
+        >
+          <div className="absolute top-6 right-6 text-cyan-500/10 group-hover:text-cyan-400/20 text-3xl transition-colors">
+            <FaQuoteLeft />
+          </div>
+
           <div className="flex items-center gap-4">
-            <img
-              src="https://i.pravatar.cc/100?img=20"
-              className="w-14 h-14 rounded-full"
-            />
+            <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-white/10 group-hover:border-cyan-500/40 transition-colors">
+              <Image
+                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150"
+                alt="Handler 03"
+                fill
+                className="object-cover"
+              />
+            </div>
             <div>
-              <h4 className="font-bold text-gray-900">Nusrat Jahan</h4>
-              <p className="text-sm text-gray-500">Dhaka</p>
+              <h4 className="font-extrabold text-white tracking-tight group-hover:text-cyan-400 transition-colors">Nadia Sterling</h4>
+              <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mt-0.5">Lifestyle Sync Mod</p>
             </div>
           </div>
 
-          <p className="mt-5 text-gray-600 text-sm leading-relaxed">
-            “Very smooth adoption process. My cat Simba is now my best friend
-            ❤️”
+          <p className="mt-6 text-slate-400 text-sm leading-relaxed italic">
+            "The demographic match engine synchronized our environment logs beautifully. Simba is fully acclimated to the grid structure. Magnificent optimization."
           </p>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </section>
   );
 };
