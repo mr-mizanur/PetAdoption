@@ -1,211 +1,115 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaEye, FaPaw, FaCheckCircle, FaMapMarkerAlt, FaSearch } from "react-icons/fa";
+import { FaEye, FaPaw, FaMapMarkerAlt, FaSearch, FaFilter } from "react-icons/fa";
 
 const AllPetsPage = () => {
   const [pets, setPets] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-
-  const user = {
-    email: "buyer1@gmail.com",
-    isLoggedIn: true,
-  };
+  const [speciesFilter, setSpeciesFilter] = useState("All");
+  const [sortOrder, setSortOrder] = useState("Default");
 
   useEffect(() => {
-   const fetchPets = async () => {
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/pets`, {
-      cache: "no-store",
-      method: "GET",
-    });
-    if (res.ok) {
-      const data = await res.json();
-      setPets(Array.isArray(data) ? data : []);
-    }
-  } catch (error) {
-    console.error("Error fetching pets:", error);
-  }
-};
+    const fetchPets = async () => {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/pets`);
+        const data = await res.json();
+        setPets(Array.isArray(data) ? data : []);
+      } catch (error) { console.error("Error:", error); }
+    };
     fetchPets();
   }, []);
 
-  const filteredPets = pets.filter((pet) => {
-    const query = searchQuery.toLowerCase();
-    return (
-      pet.name?.toLowerCase().includes(query) ||
-      pet.species?.toLowerCase().includes(query) ||
-      pet.breed?.toLowerCase().includes(query) ||
-      pet.location?.toLowerCase().includes(query)
-    );
-  });
+  const filteredPets = useMemo(() => {
+    let result = pets.filter((pet) => {
+      const query = searchQuery.toLowerCase();
+      return (pet.name?.toLowerCase().includes(query) || pet.species?.toLowerCase().includes(query));
+    }).filter(p => speciesFilter === "All" || p.species === speciesFilter);
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: { staggerChildren: 0.08 }
-    }
-  };
-
-  const cardVariants = {
-    hidden: { opacity: 0, y: 30 },
-    show: { 
-      opacity: 1, 
-      y: 0, 
-      transition: { type: "spring", stiffness: 80, damping: 15 } 
-    }
-  };
+    if (sortOrder === "Low to High") result.sort((a, b) => a.adoptionFee - b.adoptionFee);
+    if (sortOrder === "High to Low") result.sort((a, b) => b.adoptionFee - a.adoptionFee);
+    return result;
+  }, [pets, searchQuery, speciesFilter, sortOrder]);
 
   return (
-    <div className="min-h-screen bg-slate-950 pt-28 pb-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-[radial-gradient(circle_at_center,rgba(52,211,153,0.05)_0,transparent_70%)] pointer-events-none" />
-
-      <div className="max-w-7xl mx-auto mb-16 space-y-6 relative z-10">
-        <div className="text-center md:text-left">
-          <h1 className="text-3xl md:text-5xl font-black text-white tracking-tight">
-            Global{" "}
-            <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
-              Registry Database
-            </span>
-          </h1>
-          <p className="text-slate-400 text-sm font-medium tracking-wide mt-2">
-            Search and verify comprehensive biosecurity profiles of ecosystem companions
-          </p>
+    <div className="min-h-screen bg-slate-950 pt-28 pb-24 px-4 sm:px-6 lg:px-8">
+      
+      {/* 1. Filter Section */}
+      <div className="max-w-7xl mx-auto mb-16 bg-slate-900/40 border border-white/10 p-6 rounded-2xl backdrop-blur-md">
+        <div className="flex items-center gap-2 mb-6 text-emerald-400 font-bold uppercase tracking-widest text-xs">
+          <FaFilter /> Filter & Search
         </div>
-
-        <div className="relative max-w-2xl w-full group">
-          <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 blur-xl rounded-2xl opacity-0 group-focus-within:opacity-100 transition-opacity duration-500" />
-          <div className="relative flex items-center bg-slate-900/50 backdrop-blur-xl border border-white/5 group-focus-within:border-emerald-500/30 rounded-2xl overflow-hidden transition-all duration-300">
-            <div className="pl-5 text-slate-500 group-focus-within:text-emerald-400 transition-colors">
-              <FaSearch className="text-base" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="relative">
+            <label className="text-[10px] text-slate-500 uppercase font-bold ml-1">Search by name</label>
+            <div className="relative mt-2 flex items-center bg-slate-950 border border-white/5 rounded-xl px-4 py-3">
+              <FaSearch className="text-slate-600 mr-2" />
+              <input type="text" placeholder="Search pets..." className="bg-transparent w-full text-white text-sm outline-none" onChange={(e) => setSearchQuery(e.target.value)} />
             </div>
-            <input
-              type="text"
-              placeholder="Search by name, species, breed, or location node..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full px-4 py-4.5 bg-transparent text-white text-sm placeholder-slate-600 focus:outline-none"
-            />
+          </div>
+          <div>
+            <label className="text-[10px] text-slate-500 uppercase font-bold ml-1">Filter by species</label>
+            <select className="w-full mt-2 bg-slate-950 border border-white/5 rounded-xl px-4 py-3 text-white text-sm outline-none" onChange={(e) => setSpeciesFilter(e.target.value)}>
+              <option value="All">All Species</option>
+              <option value="Dog">Dog</option>
+              <option value="Cat">Cat</option>
+              <option value="Rabbit">Rabbit</option>
+            </select>
+          </div>
+          <div>
+            <label className="text-[10px] text-slate-500 uppercase font-bold ml-1">Sort by fee</label>
+            <select className="w-full mt-2 bg-slate-950 border border-white/5 rounded-xl px-4 py-3 text-white text-sm outline-none" onChange={(e) => setSortOrder(e.target.value)}>
+              <option value="Default">Default</option>
+              <option value="Low to High">Price: Low to High</option>
+              <option value="High to Low">Price: High to Low</option>
+            </select>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto relative z-10">
-        {filteredPets.length === 0 ? (
-          <div className="text-center py-24 bg-slate-900/20 border border-dashed border-white/5 rounded-3xl">
-            <p className="text-slate-500 text-sm font-bold uppercase tracking-widest">No Active Nodes Matches Search Parameters</p>
-          </div>
-        ) : (
-          <motion.div 
-            variants={containerVariants}
-            initial="hidden"
-            animate="show"
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-          >
-            <AnimatePresence mode="popLayout">
-              {filteredPets.map((pet) => {
-                const isOwner = user.isLoggedIn && pet.ownerEmail === user.email;
-                const isAdopted = pet.status === "adopted";
-                
-                let adoptLink = `/pet-details/${pet._id}`;
-                if (!user.isLoggedIn) {
-                  adoptLink = `/login?redirect=/pet-details/${pet._id}`;
-                }
+      {/* 2. Pet Cards (Rocky Style) */}
+      <div className="max-w-7xl mx-auto">
+        <motion.div layout className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <AnimatePresence>
+            {filteredPets.map((pet) => (
+              <motion.div key={pet._id} layout whileHover={{ y: -6 }} className="bg-slate-900 rounded-3xl overflow-hidden border border-white/5 shadow-2xl flex flex-col">
+                <div className="h-72 relative overflow-hidden bg-slate-950">
+                  <Image src={pet.image} alt={pet.name} fill className="object-cover" />
+                  <div className="absolute top-4 left-4 bg-slate-950/80 backdrop-blur-md border border-white/10 px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest text-white">{pet.species}</div>
+                  <div className="absolute top-4 right-4 bg-emerald-500 text-black font-black px-4 py-1.5 rounded-full text-xs">${pet.adoptionFee}</div>
+                </div>
 
-                return (
-                  <motion.div
-                    key={pet._id}
-                    variants={cardVariants}
-                    layout
-                    whileHover={{ y: -6 }}
-                    className="group relative bg-slate-900/40 backdrop-blur-xl rounded-2xl overflow-hidden border border-white/5 hover:border-emerald-500/20 shadow-2xl transition-all duration-300 flex flex-col"
-                  >
-                    <div className="h-64 overflow-hidden relative bg-slate-950">
-                      <Image
-                        src={pet.image}
-                        alt={pet.name}
-                        width={500}
-                        height={500}
-                        className="w-full h-full object-cover group-hover:scale-105 opacity-80 group-hover:opacity-100 transition-all duration-500"
-                        priority
-                      />
+                <div className="p-6 flex flex-col flex-grow">
+                  <div className="flex justify-between items-start mb-4">
+                    <h3 className="text-3xl font-black text-white">{pet.name}</h3>
+                    <span className="bg-slate-950 border border-white/10 px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider text-slate-400">{pet.breed}</span>
+                  </div>
 
-                      <div className="absolute top-4 left-4 bg-slate-950/80 backdrop-blur-md border border-white/10 px-3 py-1 rounded-lg text-[10px] font-extrabold uppercase tracking-widest text-emerald-400 shadow-md">
-                        {pet.species}
-                      </div>
+                  <div className="flex items-center gap-2 text-slate-400 text-sm mb-8">
+                    <FaMapMarkerAlt className="text-emerald-500" /> 
+                    <span>{pet.location}</span>
+                  </div>
 
-                      <div className="absolute top-4 right-4 bg-emerald-500 text-slate-950 font-black px-3 py-1 rounded-lg text-xs shadow-lg">
-                        ${pet.adoptionFee}
-                      </div>
-
-                      {isAdopted && (
-                        <div className="absolute inset-0 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center">
-                          <span className="bg-slate-900/90 border border-emerald-500/30 text-emerald-400 px-4 py-2 rounded-xl font-bold text-xs tracking-widest uppercase flex items-center gap-2 shadow-[0_0_20px_rgba(52,211,153,0.15)]">
-                            <FaCheckCircle className="text-emerald-400 text-sm" /> Adopted
-                          </span>
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="p-6 flex flex-col flex-grow space-y-4">
-                      <div className="flex justify-between items-start">
-                        <h3 className="text-xl font-extrabold text-white tracking-tight group-hover:text-emerald-400 transition-colors">
-                          {pet.name}
-                        </h3>
-                        <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-white/5 text-slate-400 border border-white/5">
-                          {pet.breed}
-                        </span>
-                      </div>
-
-                      <div className="flex items-center gap-2 text-slate-400 text-xs">
-                        <FaMapMarkerAlt className="text-emerald-500 text-xs shrink-0" />
-                        <span className="truncate">{pet.location}</span>
-                      </div>
-
-                      <div className="pt-2 mt-auto flex gap-3">
-                        <Link href={`/pet-details/${pet._id}`} className="w-full">
-                          <button className="w-full py-3 rounded-xl border border-white/10 bg-white/5 text-slate-200 text-xs font-bold uppercase tracking-wider hover:bg-white/10 hover:text-white transition-all flex items-center justify-center gap-2 cursor-pointer">
-                            <FaEye className="text-sm" /> Details
-                          </button>
-                        </Link>
-
-                        {isAdopted ? (
-                          <button
-                            disabled
-                            className="w-full py-3 rounded-xl bg-slate-950 text-slate-600 border border-white/5 text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 cursor-not-allowed"
-                          >
-                            <FaCheckCircle /> Adopted
-                          </button>
-                        ) : isOwner ? (
-                          <button
-                            disabled
-                            className="w-full py-3 rounded-xl bg-slate-950/50 border border-dashed border-white/10 text-slate-500 text-[10px] font-bold uppercase tracking-widest flex items-center justify-center cursor-not-allowed"
-                          >
-                            Your Listing
-                          </button>
-                        ) : (
-                          <Link href={adoptLink} className="w-full">
-                            <motion.button
-                              whileHover={{ scale: 1.02, boxShadow: "0 0 20px rgba(52, 211, 153, 0.4)" }}
-                              whileTap={{ scale: 0.98 }}
-                              className="w-full py-3 rounded-xl bg-emerald-500 text-slate-950 text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-lg"
-                            >
-                              <FaPaw className="text-sm" /> Adopt Now
-                            </motion.button>
-                          </Link>
-                        )}
-                      </div>
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </AnimatePresence>
-          </motion.div>
-        )}
+                  <div className="grid grid-cols-2 gap-3 mt-auto">
+                    <Link href={`/pet-details/${pet._id}`}>
+                      <button className="w-full py-3 rounded-xl border border-white/10 bg-slate-950 text-white font-bold text-sm flex items-center justify-center gap-2 hover:bg-slate-800 transition-all">
+                        <FaEye /> DETAILS
+                      </button>
+                    </Link>
+                    <Link href={`/adopt/${pet._id}`}>
+                      <button className="w-full py-3 rounded-xl bg-emerald-500 text-black font-black text-sm flex items-center justify-center gap-2 hover:bg-emerald-400 transition-all">
+                        <FaPaw /> ADOPT NOW
+                      </button>
+                    </Link>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
       </div>
     </div>
   );
