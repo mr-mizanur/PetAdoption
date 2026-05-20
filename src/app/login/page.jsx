@@ -2,6 +2,7 @@
 
 import { authClient } from "@/lib/auth-client";
 import { Eye, EyeSlash } from "@gravity-ui/icons";
+import axiosInstance from "@/utils/axiosInstance";
 import {
   Button,
   FieldError,
@@ -27,7 +28,37 @@ const LoginPage = () => {
     setTimeout(() => setNotification({ show: false, message: "", type: "" }), 3500);
   };
 
-  const handleRegister = async (e) => {
+  //const handleRegister = async (e) => {
+  //  e.preventDefault();
+  //  setLoading(true);
+//
+  //  const formData = new FormData(e.currentTarget);
+  //  const userData = Object.fromEntries(formData.entries());
+  //  
+  //  try {
+  //    const { data, error } = await authClient.signIn.email({
+  //      email: userData.email,
+  //      password: userData.password,
+  //      rememberMe: true,
+  //      callbackURL: "/",
+  //    });
+//
+  //    if (data) {
+  //      showToast("System handshake complete. Terminal unlocked! 🔓", "success");
+  //    }
+  //    if (error) {
+  //      showToast(error.message || "Encryption key error. Access denied.", "error");
+  //    }
+  //  } catch (err) {
+  //    showToast("Mainframe connection timeout.", "error");
+  //  } finally {
+  //    setLoading(false);
+  //  }
+  //};
+
+
+
+const handleRegister = async (e) => {
     e.preventDefault();
     setLoading(true);
 
@@ -35,6 +66,7 @@ const LoginPage = () => {
     const userData = Object.fromEntries(formData.entries());
     
     try {
+      // ১. অথ ক্লায়েন্ট দিয়ে সাইন-ইন
       const { data, error } = await authClient.signIn.email({
         email: userData.email,
         password: userData.password,
@@ -43,7 +75,11 @@ const LoginPage = () => {
       });
 
       if (data) {
+        // ২. লগইন সাকসেস হলে আমাদের সার্ভারে টোকেন কুকি সেট করার জন্য রিকোয়েস্ট পাঠান
+        await axiosInstance.post('/api/jwt', { email: userData.email });
+        
         showToast("System handshake complete. Terminal unlocked! 🔓", "success");
+        window.location.href = "/"; // অথবা useRouter ব্যবহার করুন
       }
       if (error) {
         showToast(error.message || "Encryption key error. Access denied.", "error");
@@ -54,6 +90,8 @@ const LoginPage = () => {
       setLoading(false);
     }
   };
+
+
 
   const handleGoogle = async () => {
     try {
@@ -67,11 +105,11 @@ const LoginPage = () => {
 
   return (
     <div className="min-h-screen bg-slate-950 pt-28 pb-24 px-4 flex items-center justify-center relative overflow-hidden">
-      {/* Background Glow Nodes */}
+     
       <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-emerald-500/5 blur-[160px] rounded-full pointer-events-none" />
       <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-cyan-500/5 blur-[160px] rounded-full pointer-events-none" />
 
-      {/* Floating Notification Toast */}
+      
       <AnimatePresence>
         {notification.show && (
           <motion.div 
@@ -137,7 +175,7 @@ const LoginPage = () => {
             <FieldError className="mt-1 text-[10px] font-black uppercase tracking-wider text-rose-500" />
           </TextField>
 
-          {/* Password Field */}
+         
           <TextField
             className="w-full space-y-2"
             name="password"
@@ -199,14 +237,14 @@ const LoginPage = () => {
             </motion.button>
           </div>
 
-          {/* Divider */}
+          
           <div className="relative flex items-center my-1">
             <div className="grow border-t border-white/5"></div>
             <span className="mx-3 text-[10px] font-black tracking-widest text-slate-600">LINK TO SSO</span>
             <div className="grow border-t border-white/5"></div>
           </div>
 
-          {/* Social Login */}
+         
           <div className="text-center">
             <motion.button
               type="button"
@@ -220,7 +258,7 @@ const LoginPage = () => {
             </motion.button>
           </div>
 
-          {/* Footer Link */}
+        
           <p className="text-center text-xs font-medium text-slate-500 pt-2">
             Identity registry missing?{" "}
             <Link
