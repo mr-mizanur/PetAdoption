@@ -30,9 +30,9 @@ export default function RootLayout({ children }) {
       <body className="min-h-full flex flex-col">
         <Navbar />
 
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+      
           {children}
-        </ThemeProvider>
+       
        
         <ToastContainer position="top-right" autoClose={3000} theme="light" />
         <Footer />

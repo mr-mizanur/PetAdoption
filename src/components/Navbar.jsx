@@ -5,27 +5,22 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button, Avatar } from "@heroui/react";
-import { useTheme } from "next-themes"; // নতুন ইম্পোর্ট
 import { authClient } from "@/lib/auth-client";
 import { 
   FaPaw, 
   FaChevronDown, 
   FaBars, 
   FaTimes, 
-  FaPlusCircle, 
-  FaList, 
   FaSignOutAlt, 
-  FaHeart, 
-  FaUserShield,
-  FaSun,
-  FaMoon
+  FaList,
+  FaPlusCircle,
+  FaHeart,
+  FaUserShield
 } from "react-icons/fa";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDashboardOpen, setIsDashboardOpen] = useState(false);
-  const { theme, setTheme } = useTheme(); // থিম হুক
-  const [mounted, setMounted] = useState(false); // হাইড্রেশন এরর এড়ানোর জন্য
   const dropdownRef = useRef(null);
   const pathname = usePathname();
   
@@ -33,7 +28,6 @@ const Navbar = () => {
   const user = data?.user;
 
   useEffect(() => {
-    setMounted(true);
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsDashboardOpen(false);
@@ -42,8 +36,6 @@ const Navbar = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
-  if (!mounted) return null; // হাইড্রেশন এরর প্রিভেন্ট করতে
 
   const handleLogOut = async () => {
     await authClient.signOut();
@@ -86,14 +78,6 @@ const Navbar = () => {
 
         {/* Right Side Controls */}
         <div className="hidden md:flex items-center gap-4">
-          {/* Theme Toggle Button */}
-          <button 
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            className="p-2.5 rounded-xl bg-white/5 border border-white/5 text-emerald-400 hover:bg-white/10 hover:border-emerald-500/30 transition-all"
-          >
-            {theme === 'dark' ? <FaSun className="text-sm" /> : <FaMoon className="text-sm" />}
-          </button>
-
           {user ? (
             <div className="relative inline-block text-left" ref={dropdownRef}>
               <div 
@@ -105,21 +89,24 @@ const Navbar = () => {
                 <FaChevronDown className="text-[10px] text-slate-500" />
               </div>
               
-              {/* Dashboard Dropdown (Same as before) */}
               <AnimatePresence>
                 {isDashboardOpen && (
-                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }} className="absolute right-0 mt-2 w-64 bg-slate-950/95 backdrop-blur-2xl border border-white/10 p-2 rounded-2xl z-50">
-                    {/* (Dropdown content remains same) */}
-                    <button onClick={handleLogOut} className="w-full flex items-center gap-3 px-3 py-2.5 text-rose-400 text-xs font-bold"> <FaSignOutAlt /> Terminate Session</button>
+                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }} className="absolute right-0 mt-2 w-56 bg-slate-900 border border-white/10 p-2 rounded-2xl z-50 shadow-xl">
+                    <Link href="/dashboard" className="flex items-center gap-3 px-3 py-2.5 hover:bg-white/5 rounded-xl text-xs font-bold text-slate-300 transition-colors">
+                      <FaUserShield className="text-emerald-400" /> Dashboard
+                    </Link>
+                    <button onClick={handleLogOut} className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-white/5 rounded-xl text-rose-400 text-xs font-bold transition-colors"> 
+                      <FaSignOutAlt /> Terminate Session 
+                    </button>
                   </motion.div>
                 )}
               </AnimatePresence>
             </div>
           ) : (
             <div className="flex items-center gap-4">
-              <Link href="/login" className="text-xs font-bold uppercase text-slate-400">Login</Link>
+              <Link href="/login" className="text-xs font-bold uppercase text-slate-400 hover:text-white transition-colors">Login</Link>
               <Link href="/registration">
-                <Button size="sm" className="rounded-lg bg-emerald-500 font-bold text-xs uppercase">Sign Up</Button>
+                <Button size="sm" className="rounded-lg bg-emerald-500 font-bold text-xs uppercase hover:bg-emerald-600 transition-colors">Sign Up</Button>
               </Link>
             </div>
           )}
