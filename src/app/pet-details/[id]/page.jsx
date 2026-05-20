@@ -13,23 +13,47 @@ import {
 } from "react-icons/fa";
 import AdoptionFrom from "@/components/AdoptionFrom";
 
-const PetDetailsPage = async ({ params }) => {
+export async function generateMetadata({ params }) {
   const { id } = await params;
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
   
-  const res = await fetch(`http://localhost:5000/api/pets/${id}`, {
+  try {
+    const res = await fetch(`${baseUrl}/api/pets/${id}`);
+    if (!res.ok) return { title: "Asset Not Found" };
+    
+    const pet = await res.json();
+    return {
+      title: `${pet.name} | Companion Profile`,
+      description: pet.description || `Specification profile for node ${pet.name}`,
+    };
+  } catch {
+    return { title: "Secure Gateway Failure" };
+  }
+}
+
+async function getPetData(id) {
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+  
+  const res = await fetch(`${baseUrl}/api/pets/${id}`, {
     method: "GET",
-    cache: "no-store", 
+    next: { revalidate: 60 },
   });
 
-  if (!res.ok) {
+  if (!res.ok) return null;
+  return res.json();
+}
+
+const PetDetailsPage = async ({ params }) => {
+  const { id } = await params;
+  const pet = await getPetData(id);
+
+  if (!pet) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-950 text-rose-500 font-bold uppercase tracking-widest text-xs border border-rose-500/10">
-        Fatal: Companion Diagnostics Not Found
+        Fatal: Companion Diagnostics Not Found For Node ID: {id}
       </div>
     );
   }
-
-  const pet = await res.json();
 
   return (
     <div className="min-h-screen bg-slate-950 pt-28 pb-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
@@ -42,7 +66,7 @@ const PetDetailsPage = async ({ params }) => {
           
           <div className="relative h-[450px] w-full bg-slate-950 border-b border-white/5">
             <Image
-              src={pet.image} 
+              src={pet.image || "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe"} 
               alt={pet.name}
               fill
               className="object-cover object-center opacity-85"

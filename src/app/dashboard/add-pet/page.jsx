@@ -63,7 +63,7 @@ const AddPetPage = () => {
       }
     } catch (error) {
       showNotification("Ecosystem pipeline error. Connection timeout.", "error");
-    } fileyl {
+    } finally {
       setLoading(false);
     }
   };

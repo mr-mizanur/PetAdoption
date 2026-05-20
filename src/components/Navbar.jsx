@@ -118,7 +118,7 @@ const Navbar = () => {
                     {[
                       { href: "/dashboard/my-requests", label: "My Requests", icon: <FaHeart className="text-emerald-400" /> },
                       { href: "/dashboard/add-pet", label: "Add Asset Node", icon: <FaPlusCircle className="text-teal-400" /> },
-                      { href: "/dashboard/my-listings", label: "My Listings Hub", icon: <FaList className="text-cyan-400" /> }
+                      { href: "/dashboard/my-listing", label: "My Listings Hub", icon: <FaList className="text-cyan-400" /> }
                     ].map((link, i) => (
                       <Link 
                         key={i} 
@@ -191,7 +191,7 @@ const Navbar = () => {
                 <Link href="/dashboard/add-pet" onClick={() => setIsMenuOpen(false)} className="pl-2 text-sm text-slate-400 hover:text-white flex items-center gap-3">
                   <FaPlusCircle className="text-teal-400 text-xs" /> Add Pet
                 </Link>
-                <Link href="/dashboard/my-listings" onClick={() => setIsMenuOpen(false)} className="pl-2 text-sm text-slate-400 hover:text-white flex items-center gap-3">
+                <Link href="/dashboard/my-listing" onClick={() => setIsMenuOpen(false)} className="pl-2 text-sm text-slate-400 hover:text-white flex items-center gap-3">
                   <FaList className="text-cyan-400 text-xs" /> My Listings
                 </Link>
 

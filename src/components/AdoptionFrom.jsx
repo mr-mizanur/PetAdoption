@@ -5,7 +5,6 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
-  FaCalendarAlt, 
   FaPaperPlane, 
   FaShieldAlt, 
   FaExclamationTriangle, 
@@ -56,7 +55,8 @@ const AdoptionFrom = ({ pet }) => {
     };
 
     try {
-      const res = await fetch("http://localhost:5000/api/requests", {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+      const res = await fetch(`${baseUrl}/api/requests`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

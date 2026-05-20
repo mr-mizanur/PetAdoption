@@ -8,6 +8,7 @@ import { FaEye, FaPaw, FaCheckCircle, FaMapMarkerAlt } from "react-icons/fa";
 
 const FeaturedPets = () => {
   const [pets, setPets] = useState([]);
+  const [loading, setLoading] = useState(true);
   
   const user = {
     email: "buyer1@gmail.com",
@@ -17,7 +18,8 @@ const FeaturedPets = () => {
   useEffect(() => {
     const fetchPets = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/pets", {
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+        const res = await fetch(`${baseUrl}/api/pets`, {
           cache: "no-store",
           method: "GET",
         });
@@ -27,6 +29,8 @@ const FeaturedPets = () => {
         }
       } catch (error) {
         console.error("Error fetching pets:", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchPets();
@@ -48,6 +52,14 @@ const FeaturedPets = () => {
       transition: { type: "spring", stiffness: 80, damping: 15 } 
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-[40vh] flex items-center justify-center bg-slate-950 text-emerald-400 font-bold uppercase tracking-widest text-xs">
+        Syncing Companion Registry...
+      </div>
+    );
+  }
 
   return (
     <section className="mt-32 pb-20 relative">
@@ -90,7 +102,7 @@ const FeaturedPets = () => {
             >
               <div className="h-64 overflow-hidden relative bg-slate-950">
                 <Image
-                  src={pet.image}
+                  src={pet.image || "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe"}
                   alt={pet.name}
                   width={500}
                   height={500}
