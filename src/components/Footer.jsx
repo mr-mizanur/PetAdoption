@@ -56,8 +56,8 @@ const Footer = () => {
             {[
               { text: "Explore Listings", href: "/all-pets" },
               { text: "Rehome Protocol", href: "/dashboard/add-pet" },
-              { text: "Safety Metrics", href: "#" },
-              { text: "Verification Log", href: "#" }
+              { text: "Safety Metrics", href: "/safety-metrics" },
+              { text: "Verification Log", href: "/verification-log" }
             ].map((item, idx) => (
               <li key={idx}>
                 <Link href={item.href} className="text-slate-400 hover:text-emerald-400 text-sm tracking-wide transition-colors">
@@ -72,10 +72,10 @@ const Footer = () => {
           <h4 className="text-xs font-bold uppercase tracking-widest text-white">Resources</h4>
           <ul className="space-y-2.5">
             {[
-              { text: "Sustenance Hub", href: "#" },
-              { text: "Clinical Guides", href: "#" },
-              { text: "Developer Core", href: "#" },
-              { text: "System Status", href: "#" }
+              { text: "Sustenance Hub", href: "/sustenance-hub" },
+              { text: "Clinical Guides", href: "/clinical-guides" },
+              { text: "Developer Core", href: "/developer-core" },
+              { text: "System Status", href: "/system-status" }
             ].map((item, idx) => (
               <li key={idx}>
                 <Link href={item.href} className="text-slate-400 hover:text-emerald-400 text-sm tracking-wide transition-colors">

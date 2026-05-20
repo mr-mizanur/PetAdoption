@@ -20,7 +20,7 @@ const FeaturedPets = () => {
         setLoading(true);
         const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
         
-        // আলাদা আলাদা ফেচ কল যাতে একটি এরর দিলেও অন্যটি কাজ করে
+       
         const petsRes = await fetch(`${baseUrl}/api/pets`);
         const petsData = petsRes.ok ? await petsRes.json() : [];
         setPets(petsData);
@@ -94,7 +94,7 @@ return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
       {pets.slice(0, 6).map((pet) => (
         <motion.div key={pet._id} className="bg-slate-900/40 rounded-2xl overflow-hidden border border-white/5 flex flex-col hover:border-emerald-500/30 transition-all">
-          {/* ইমেজ সেকশন */}
+          
           <div className="h-64 relative">
             <div className="absolute top-4 right-4 z-10 px-3 py-1 bg-emerald-500/20 border border-emerald-500/30 rounded-full text-[10px] font-bold text-emerald-400 uppercase">
               {pet.status || "Available"}
@@ -106,7 +106,7 @@ return (
             </button>
           </div>
 
-          {/* কার্ড কন্টেন্ট */}
+        
           <div className="p-6 flex-1 space-y-4">
             <div>
               <h3 className="text-xl font-black text-white">{pet.name}</h3>
@@ -126,7 +126,7 @@ return (
             </div>
           </div>
 
-          {/* বাটন সেকশন */}
+         
           <div className="p-6 pt-0 flex gap-2">
             <Link href={`/pet-details/${pet._id}`} className="flex-1">
               <button className="w-full py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-wider text-white transition-all">
