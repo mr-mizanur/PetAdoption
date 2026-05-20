@@ -66,7 +66,7 @@ const handleRegister = async (e) => {
     const userData = Object.fromEntries(formData.entries());
     
     try {
-      // ১. অথ ক্লায়েন্ট দিয়ে সাইন-ইন
+  
       const { data, error } = await authClient.signIn.email({
         email: userData.email,
         password: userData.password,
@@ -75,11 +75,11 @@ const handleRegister = async (e) => {
       });
 
       if (data) {
-        // ২. লগইন সাকসেস হলে আমাদের সার্ভারে টোকেন কুকি সেট করার জন্য রিকোয়েস্ট পাঠান
+       
         await axiosInstance.post('/api/jwt', { email: userData.email });
         
-        showToast("System handshake complete. Terminal unlocked! 🔓", "success");
-        window.location.href = "/"; // অথবা useRouter ব্যবহার করুন
+        showToast("System handshake complete. Terminal unlocked! ", "success");
+        window.location.href = "/"; 
       }
       if (error) {
         showToast(error.message || "Encryption key error. Access denied.", "error");
