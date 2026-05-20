@@ -9,11 +9,12 @@ import { authClient } from "@/lib/auth-client";
 import { 
   FaPaw, 
   FaChevronDown, 
-  FaSignOutAlt 
+  FaSignOutAlt,
+  FaList,
+  FaUserShield
 } from "react-icons/fa";
 
 const Navbar = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDashboardOpen, setIsDashboardOpen] = useState(false);
   const [mounted, setMounted] = useState(false); 
   const dropdownRef = useRef(null);
@@ -58,7 +59,6 @@ const Navbar = () => {
           </span>
         </Link>
 
-        {/* Desktop Links */}
         <ul className="hidden md:flex items-center gap-8">
           {mainLinks.map((item) => (
             <li key={item.href} className="relative py-1">
@@ -74,7 +74,6 @@ const Navbar = () => {
           ))}
         </ul>
 
-        {/* Right Side Controls */}
         <div className="hidden md:flex items-center gap-4">
           {user ? (
             <div className="relative inline-block text-left" ref={dropdownRef}>
@@ -90,7 +89,15 @@ const Navbar = () => {
               <AnimatePresence>
                 {isDashboardOpen && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }} className="absolute right-0 mt-2 w-64 bg-slate-950/95 backdrop-blur-2xl border border-white/10 p-2 rounded-2xl z-50">
-                    <button onClick={handleLogOut} className="w-full flex items-center gap-3 px-3 py-2.5 text-rose-400 text-xs font-bold"> <FaSignOutAlt /> Terminate Session</button>
+                    <Link href="/dashboard" onClick={() => setIsDashboardOpen(false)} className="w-full flex items-center gap-3 px-3 py-2.5 text-slate-300 hover:text-white hover:bg-white/10 rounded-xl text-xs font-bold transition-all">
+                      <FaUserShield /> Dashboard
+                    </Link>
+                    <Link href="/dashboard/my-requests" onClick={() => setIsDashboardOpen(false)} className="w-full flex items-center gap-3 px-3 py-2.5 text-slate-300 hover:text-emerald-400 hover:bg-white/10 rounded-xl text-xs font-bold transition-all">
+                      <FaList /> My Requests
+                    </Link>
+                    <button onClick={handleLogOut} className="w-full flex items-center gap-3 px-3 py-2.5 text-rose-400 hover:bg-white/10 rounded-xl text-xs font-bold transition-all"> 
+                      <FaSignOutAlt /> Terminate Session
+                    </button>
                   </motion.div>
                 )}
               </AnimatePresence>
