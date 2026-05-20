@@ -5,27 +5,17 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button, Avatar } from "@heroui/react";
-import { useTheme } from "next-themes"; // নতুন ইম্পোর্ট
 import { authClient } from "@/lib/auth-client";
 import { 
   FaPaw, 
   FaChevronDown, 
-  FaBars, 
-  FaTimes, 
-  FaPlusCircle, 
-  FaList, 
-  FaSignOutAlt, 
-  FaHeart, 
-  FaUserShield,
-  FaSun,
-  FaMoon
+  FaSignOutAlt 
 } from "react-icons/fa";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDashboardOpen, setIsDashboardOpen] = useState(false);
-  const { theme, setTheme } = useTheme(); // থিম হুক
-  const [mounted, setMounted] = useState(false); // হাইড্রেশন এরর এড়ানোর জন্য
+  const [mounted, setMounted] = useState(false); 
   const dropdownRef = useRef(null);
   const pathname = usePathname();
   
@@ -43,7 +33,7 @@ const Navbar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  if (!mounted) return null; // হাইড্রেশন এরর প্রিভেন্ট করতে
+  if (!mounted) return null;
 
   const handleLogOut = async () => {
     await authClient.signOut();
@@ -86,14 +76,6 @@ const Navbar = () => {
 
         {/* Right Side Controls */}
         <div className="hidden md:flex items-center gap-4">
-          {/* Theme Toggle Button */}
-          <button 
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            className="p-2.5 rounded-xl bg-white/5 border border-white/5 text-emerald-400 hover:bg-white/10 hover:border-emerald-500/30 transition-all"
-          >
-            {theme === 'dark' ? <FaSun className="text-sm" /> : <FaMoon className="text-sm" />}
-          </button>
-
           {user ? (
             <div className="relative inline-block text-left" ref={dropdownRef}>
               <div 
@@ -105,11 +87,9 @@ const Navbar = () => {
                 <FaChevronDown className="text-[10px] text-slate-500" />
               </div>
               
-              {/* Dashboard Dropdown (Same as before) */}
               <AnimatePresence>
                 {isDashboardOpen && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }} className="absolute right-0 mt-2 w-64 bg-slate-950/95 backdrop-blur-2xl border border-white/10 p-2 rounded-2xl z-50">
-                    {/* (Dropdown content remains same) */}
                     <button onClick={handleLogOut} className="w-full flex items-center gap-3 px-3 py-2.5 text-rose-400 text-xs font-bold"> <FaSignOutAlt /> Terminate Session</button>
                   </motion.div>
                 )}
@@ -124,11 +104,9 @@ const Navbar = () => {
             </div>
           )}
         </div>
-
-        
       </div>
     </nav>
   );
 };
 
-export default Navbar;  
+export default Navbar;
