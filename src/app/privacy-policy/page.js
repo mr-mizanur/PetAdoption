@@ -54,7 +54,7 @@ const PrivacyPolicy = () => {
           ))}
         </div>
 
-        {/* Footer Note */}
+        
         <div className="mt-16 text-center text-slate-600 text-sm">
           <p>© 2026 PetAdoption Platform. Privacy by Design approach.</p>
         </div>
