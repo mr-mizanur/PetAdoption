@@ -13,11 +13,14 @@ import {
   FaList,
   FaPlus,
   FaUserShield,
-  FaClipboardList
+  FaClipboardList,
+  FaBars,
+  FaTimes
 } from "react-icons/fa";
 
 const Navbar = () => {
   const [isDashboardOpen, setIsDashboardOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // নতুন স্টেট
   const [mounted, setMounted] = useState(false); 
   const dropdownRef = useRef(null);
   const pathname = usePathname();
@@ -41,6 +44,7 @@ const Navbar = () => {
   const handleLogOut = async () => {
     await authClient.signOut();
     setIsDashboardOpen(false);
+    setIsMobileMenuOpen(false);
   };
 
   const mainLinks = [
@@ -61,15 +65,11 @@ const Navbar = () => {
           </span>
         </Link>
 
+        {/* Desktop Menu */}
         <ul className="hidden md:flex items-center gap-8">
           {mainLinks.map((item) => (
             <li key={item.href} className="relative py-1">
-              <Link
-                href={item.href}
-                className={`text-sm font-medium tracking-wide transition-colors duration-200 ${
-                  isActive(item.href) ? "text-emerald-400" : "text-slate-400 hover:text-white"
-                }`}
-              >
+              <Link href={item.href} className={`text-sm font-medium transition-colors ${isActive(item.href) ? "text-emerald-400" : "text-slate-400 hover:text-white"}`}>
                 {item.label}
               </Link>
             </li>
@@ -79,43 +79,20 @@ const Navbar = () => {
         <div className="hidden md:flex items-center gap-4">
           {user ? (
             <div className="relative inline-block text-left" ref={dropdownRef}>
-              <div 
-                onClick={() => setIsDashboardOpen(!isDashboardOpen)}
-                className="flex items-center gap-3 px-3 py-2 rounded-xl bg-white/5 border border-white/5 hover:border-emerald-500/30 hover:bg-slate-900 transition-all cursor-pointer"
-              >
-                {/* ইমেজ বা Fallback হ্যান্ডলিং */}
-                <Avatar 
-                  size="sm" 
-                  src={user.image ?? undefined} 
-                  fallback={user.name?.slice(0, 2).toUpperCase()} 
-                  className="w-7 h-7 text-xs font-black bg-emerald-500 text-slate-950" 
-                />
+              <div onClick={() => setIsDashboardOpen(!isDashboardOpen)} className="flex items-center gap-3 px-3 py-2 rounded-xl bg-white/5 border border-white/5 hover:border-emerald-500/30 cursor-pointer">
+                <Avatar size="sm" src={user.image ?? undefined} fallback={user.name?.slice(0, 2).toUpperCase()} className="w-7 h-7 text-xs font-black bg-emerald-500 text-slate-950" />
                 <span className="text-xs font-bold text-slate-300 truncate max-w-[100px]">{user.name}</span>
                 <FaChevronDown className="text-[10px] text-slate-500" />
               </div>
               
               <AnimatePresence>
                 {isDashboardOpen && (
-                  <motion.div 
-                    initial={{ opacity: 0, y: 10 }} 
-                    animate={{ opacity: 1, y: 0 }} 
-                    exit={{ opacity: 0, y: 10 }} 
-                    className="absolute right-0 mt-2 w-56 bg-slate-950/95 backdrop-blur-2xl border border-white/10 p-2 rounded-2xl z-50 shadow-2xl"
-                  >
-                  
-                    <Link href="/dashboard/my-requests" onClick={() => setIsDashboardOpen(false)} className="flex items-center gap-3 px-3 py-2.5 text-slate-300 hover:text-emerald-400 hover:bg-white/5 rounded-xl text-xs font-bold transition-all">
-                      <FaList /> My Requests
-                    </Link>
-                    <Link href="/dashboard/add-pet" onClick={() => setIsDashboardOpen(false)} className="flex items-center gap-3 px-3 py-2.5 text-slate-300 hover:text-emerald-400 hover:bg-white/5 rounded-xl text-xs font-bold transition-all">
-                      <FaPlus /> Add Pet
-                    </Link>
-                    <Link href="/dashboard/my-listing" onClick={() => setIsDashboardOpen(false)} className="flex items-center gap-3 px-3 py-2.5 text-slate-300 hover:text-emerald-400 hover:bg-white/5 rounded-xl text-xs font-bold transition-all">
-                      <FaClipboardList /> My Listings
-                    </Link>
+                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }} className="absolute right-0 mt-2 w-56 bg-slate-950/95 border border-white/10 p-2 rounded-2xl z-50">
+                    <Link href="/dashboard/my-requests" onClick={() => setIsDashboardOpen(false)} className="flex items-center gap-3 px-3 py-2.5 text-slate-300 hover:text-emerald-400 hover:bg-white/5 rounded-xl text-xs font-bold transition-all"><FaList /> My Requests</Link>
+                    <Link href="/dashboard/add-pet" onClick={() => setIsDashboardOpen(false)} className="flex items-center gap-3 px-3 py-2.5 text-slate-300 hover:text-emerald-400 hover:bg-white/5 rounded-xl text-xs font-bold transition-all"><FaPlus /> Add Pet</Link>
+                    <Link href="/dashboard/my-listing" onClick={() => setIsDashboardOpen(false)} className="flex items-center gap-3 px-3 py-2.5 text-slate-300 hover:text-emerald-400 hover:bg-white/5 rounded-xl text-xs font-bold transition-all"><FaClipboardList /> My Listings</Link>
                     <div className="my-1 border-t border-white/10"></div>
-                    <button onClick={handleLogOut} className="w-full flex items-center gap-3 px-3 py-2.5 text-rose-400 hover:bg-rose-500/10 rounded-xl text-xs font-bold transition-all"> 
-                      <FaSignOutAlt /> Terminate Session
-                    </button>
+                    <button onClick={handleLogOut} className="w-full flex items-center gap-3 px-3 py-2.5 text-rose-400 hover:bg-rose-500/10 rounded-xl text-xs font-bold transition-all"> <FaSignOutAlt /> Terminate Session</button>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -123,13 +100,38 @@ const Navbar = () => {
           ) : (
             <div className="flex items-center gap-4">
               <Link href="/login" className="text-xs font-bold uppercase text-slate-400">Login</Link>
-              <Link href="/registration">
-                <Button size="sm" className="rounded-lg bg-emerald-500 font-bold text-xs uppercase">Sign Up</Button>
-              </Link>
+              <Link href="/registration"><Button size="sm" className="rounded-lg bg-emerald-500 font-bold text-xs uppercase">Sign Up</Button></Link>
             </div>
           )}
         </div>
+
+        {/* Hamburger Icon */}
+        <button className="md:hidden text-xl" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+          {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
+        </button>
       </div>
+
+      {/* Mobile Menu Panel */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="md:hidden bg-slate-950 border-b border-white/10 overflow-hidden">
+            <div className="flex flex-col p-6 gap-4">
+              {mainLinks.map((item) => (
+                <Link key={item.href} href={item.href} onClick={() => setIsMobileMenuOpen(false)} className="text-lg font-bold text-slate-300">{item.label}</Link>
+              ))}
+              {user ? (
+                <>
+                  <Link href="/dashboard/my-requests" onClick={() => setIsMobileMenuOpen(false)} className="text-slate-300">My Requests</Link>
+                  <Link href="/dashboard/add-pet" onClick={() => setIsMobileMenuOpen(false)} className="text-slate-300">Add Pet</Link>
+                  <button onClick={handleLogOut} className="text-left text-rose-400 font-bold">Log Out</button>
+                </>
+              ) : (
+                <Link href="/login" onClick={() => setIsMobileMenuOpen(false)} className="text-emerald-400 font-bold">Login / Sign Up</Link>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 };

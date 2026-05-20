@@ -4,7 +4,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaHeart, FaCheckCircle, FaMapMarkerAlt, FaSearch, FaFilter } from "react-icons/fa";
+import { FaHeart, FaCheckCircle, FaMapMarkerAlt } from "react-icons/fa";
 import toast, { Toaster } from "react-hot-toast";
 
 const AllPetsPage = () => {
@@ -20,7 +20,6 @@ const AllPetsPage = () => {
     const fetchData = async () => {
       const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
-      // Fetch Pets
       try {
         const res = await fetch(`${baseUrl}/api/pets`, { cache: "no-store" });
         if (res.ok) {
@@ -31,7 +30,6 @@ const AllPetsPage = () => {
         console.error("Error fetching pets:", error);
       }
 
-      // Fetch Wishlist
       try {
         const res = await fetch(`${baseUrl}/api/wishlist/${user.email}`);
         if (res.ok) {
@@ -87,11 +85,9 @@ const AllPetsPage = () => {
       <Toaster position="top-right" />
       
       <div className="max-w-7xl mx-auto mb-16 relative z-10 space-y-8">
-        <div className="text-center md:text-left">
-          <h1 className="text-3xl md:text-5xl font-black text-white tracking-tight">
-            Global <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">Registry Database</span>
-          </h1>
-        </div>
+        <h1 className="text-3xl md:text-5xl font-black text-white tracking-tight">
+          Global <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">Registry Database</span>
+        </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 bg-slate-900/40 border border-white/5 p-6 rounded-2xl backdrop-blur-xl">
           <input type="text" placeholder="Search..." className="bg-slate-950 border border-white/10 text-white px-4 py-3 rounded-xl outline-none" onChange={(e) => setSearchQuery(e.target.value)} />
@@ -110,33 +106,41 @@ const AllPetsPage = () => {
       <div className="max-w-7xl mx-auto relative z-10">
         <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <AnimatePresence mode="popLayout">
-            {filteredPets.map((pet, index) => {
+            {filteredPets.map((pet) => {
               const isOwner = user.isLoggedIn && pet.ownerEmail === user.email;
               const isAdopted = pet.status === "adopted";
               let adoptLink = user.isLoggedIn ? `/pet-details/${pet._id}` : `/login?redirect=/pet-details/${pet._id}`;
 
               return (
-                <motion.div key={`${pet._id}-${index}`} layout whileHover={{ y: -6 }} className="group relative bg-slate-900/40 backdrop-blur-xl rounded-2xl overflow-hidden border border-white/5 hover:border-emerald-500/20 shadow-2xl flex flex-col">
+                <motion.div key={pet._id} layout whileHover={{ y: -6 }} className="group relative bg-slate-900/40 backdrop-blur-xl rounded-2xl overflow-hidden border border-white/5 hover:border-emerald-500/20 shadow-2xl flex flex-col transition-all">
                   <div className="h-64 overflow-hidden relative bg-slate-950">
-                    <Image src={pet.image} alt={pet.name} width={500} height={500} sizes="(max-width: 768px) 100vw, 33vw" className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500" />
-                    
-                    <button 
-                      onClick={() => handleWishlist(pet._id)} 
-                      className={`absolute top-4 left-4 p-2.5 backdrop-blur-md rounded-full transition-all border border-white/10 ${wishlistIds.includes(pet._id) ? "text-rose-500 bg-slate-950/80" : "text-white bg-slate-950/60 hover:text-rose-500"}`}
-                    >
+                    <Image src={pet.image} alt={pet.name} width={500} height={500} className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500" />
+                    <button onClick={() => handleWishlist(pet._id)} className={`absolute top-4 left-4 p-2.5 backdrop-blur-md rounded-full transition-all border border-white/10 ${wishlistIds.includes(pet._id) ? "text-rose-500 bg-slate-950/80" : "text-white bg-slate-950/60 hover:text-rose-500"}`}>
                       <FaHeart />
                     </button>
-
-                    <div className="absolute top-4 right-4 bg-emerald-500 text-slate-950 font-black px-3 py-1 rounded-lg text-xs">${pet.adoptionFee}</div>
                     {isAdopted && <div className="absolute inset-0 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center"><span className="bg-slate-900/90 text-emerald-400 px-4 py-2 rounded-xl font-bold text-xs uppercase flex items-center gap-2"><FaCheckCircle /> Adopted</span></div>}
                   </div>
 
                   <div className="p-6 flex flex-col flex-grow space-y-4">
-                    <h3 className="text-xl font-extrabold text-white">{pet.name}</h3>
-                    <div className="flex items-center gap-2 text-slate-400 text-xs"><FaMapMarkerAlt className="text-emerald-500" /> {pet.location}</div>
+                    <div>
+                      <h3 className="text-xl font-black text-white">{pet.name}</h3>
+                      <p className="text-slate-400 text-sm mt-1">{pet.age} years old • {pet.gender}</p>
+                    </div>
+
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2 text-xs text-slate-400"><FaMapMarkerAlt className="text-emerald-500" /> <span>{pet.location}</span></div>
+                      <div className="text-emerald-400 font-bold text-sm">${pet.adoptionFee} adoption fee</div>
+                    </div>
+
                     <div className="pt-2 mt-auto flex gap-3">
-                      <Link href={`/pet-details/${pet._id}`} className="w-full"><button className="w-full py-3 rounded-xl border border-white/10 bg-white/5 text-slate-200 text-xs font-bold uppercase hover:bg-white/10">Details</button></Link>
-                      {!isAdopted && !isOwner && <Link href={adoptLink} className="w-full"><button className="w-full py-3 rounded-xl bg-emerald-500 text-slate-950 text-xs font-black uppercase">Adopt Now</button></Link>}
+                      <Link href={`/pet-details/${pet._id}`} className="flex-1">
+                        <button className="w-full py-3 rounded-xl border border-white/10 bg-white/5 text-slate-200 text-xs font-bold uppercase hover:bg-white/10 transition-all">Details</button>
+                      </Link>
+                      {!isAdopted && !isOwner && (
+                        <Link href={adoptLink} className="flex-1">
+                          <button className="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 text-xs font-black uppercase transition-all">Adopt Now</button>
+                        </Link>
+                      )}
                     </div>
                   </div>
                 </motion.div>
