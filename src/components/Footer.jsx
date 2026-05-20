@@ -112,8 +112,8 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-[11px] font-bold uppercase tracking-widest text-slate-600 relative z-10">
         <p>© 2026 PetAdoption Node. All Rights Reserved.</p>
         <div className="flex gap-6">
-          <Link href="#" className="hover:text-slate-400 transition-colors">Privacy Paradigm</Link>
-          <Link href="#" className="hover:text-slate-400 transition-colors">Terms of Grid</Link>
+          <Link href="/privacy-policy" className="hover:text-slate-400 transition-colors">Privacy Paradigm</Link>
+          <Link href="/terms-of-grid" className="hover:text-slate-400 transition-colors">Terms of Grid</Link>
         </div>
       </div>
     </footer>
