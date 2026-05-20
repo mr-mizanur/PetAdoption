@@ -11,7 +11,9 @@ import {
   FaChevronDown, 
   FaSignOutAlt,
   FaList,
-  FaUserShield
+  FaPlus,
+  FaUserShield,
+  FaClipboardList
 } from "react-icons/fa";
 
 const Navbar = () => {
@@ -81,21 +83,39 @@ const Navbar = () => {
                 onClick={() => setIsDashboardOpen(!isDashboardOpen)}
                 className="flex items-center gap-3 px-3 py-2 rounded-xl bg-white/5 border border-white/5 hover:border-emerald-500/30 hover:bg-slate-900 transition-all cursor-pointer"
               >
-                <Avatar size="sm" src={user.image} fallback={user.name?.slice(0, 2)} className="w-7 h-7 text-xs font-black bg-emerald-500 text-slate-950" />
+                {/* ইমেজ বা Fallback হ্যান্ডলিং */}
+                <Avatar 
+                  size="sm" 
+                  src={user.image ?? undefined} 
+                  fallback={user.name?.slice(0, 2).toUpperCase()} 
+                  className="w-7 h-7 text-xs font-black bg-emerald-500 text-slate-950" 
+                />
                 <span className="text-xs font-bold text-slate-300 truncate max-w-[100px]">{user.name}</span>
                 <FaChevronDown className="text-[10px] text-slate-500" />
               </div>
               
               <AnimatePresence>
                 {isDashboardOpen && (
-                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }} className="absolute right-0 mt-2 w-64 bg-slate-950/95 backdrop-blur-2xl border border-white/10 p-2 rounded-2xl z-50">
-                    <Link href="/dashboard" onClick={() => setIsDashboardOpen(false)} className="w-full flex items-center gap-3 px-3 py-2.5 text-slate-300 hover:text-white hover:bg-white/10 rounded-xl text-xs font-bold transition-all">
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10 }} 
+                    animate={{ opacity: 1, y: 0 }} 
+                    exit={{ opacity: 0, y: 10 }} 
+                    className="absolute right-0 mt-2 w-56 bg-slate-950/95 backdrop-blur-2xl border border-white/10 p-2 rounded-2xl z-50 shadow-2xl"
+                  >
+                    <Link href="/dashboard" onClick={() => setIsDashboardOpen(false)} className="flex items-center gap-3 px-3 py-2.5 text-slate-300 hover:text-emerald-400 hover:bg-white/5 rounded-xl text-xs font-bold transition-all">
                       <FaUserShield /> Dashboard
                     </Link>
-                    <Link href="/dashboard/my-requests" onClick={() => setIsDashboardOpen(false)} className="w-full flex items-center gap-3 px-3 py-2.5 text-slate-300 hover:text-emerald-400 hover:bg-white/10 rounded-xl text-xs font-bold transition-all">
+                    <Link href="/dashboard/my-requests" onClick={() => setIsDashboardOpen(false)} className="flex items-center gap-3 px-3 py-2.5 text-slate-300 hover:text-emerald-400 hover:bg-white/5 rounded-xl text-xs font-bold transition-all">
                       <FaList /> My Requests
                     </Link>
-                    <button onClick={handleLogOut} className="w-full flex items-center gap-3 px-3 py-2.5 text-rose-400 hover:bg-white/10 rounded-xl text-xs font-bold transition-all"> 
+                    <Link href="/dashboard/add-pet" onClick={() => setIsDashboardOpen(false)} className="flex items-center gap-3 px-3 py-2.5 text-slate-300 hover:text-emerald-400 hover:bg-white/5 rounded-xl text-xs font-bold transition-all">
+                      <FaPlus /> Add Pet
+                    </Link>
+                    <Link href="/dashboard/my-listing" onClick={() => setIsDashboardOpen(false)} className="flex items-center gap-3 px-3 py-2.5 text-slate-300 hover:text-emerald-400 hover:bg-white/5 rounded-xl text-xs font-bold transition-all">
+                      <FaClipboardList /> My Listings
+                    </Link>
+                    <div className="my-1 border-t border-white/10"></div>
+                    <button onClick={handleLogOut} className="w-full flex items-center gap-3 px-3 py-2.5 text-rose-400 hover:bg-rose-500/10 rounded-xl text-xs font-bold transition-all"> 
                       <FaSignOutAlt /> Terminate Session
                     </button>
                   </motion.div>
