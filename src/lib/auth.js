@@ -8,7 +8,7 @@ const db = client.db("prittycats");
 
 export const auth = betterAuth({
   database: mongodbAdapter(db, { client }),
-  baseURL: process.env.BETTER_AUTH_URL, // .env এ এটি সেট করুন
+  baseURL: process.env.BETTER_AUTH_URL,
   emailAndPassword: { enabled: true },
   socialProviders: {
     google: {

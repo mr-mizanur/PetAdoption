@@ -3,6 +3,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { ToastContainer } from "react-toastify";
+import { ThemeProvider } from "next-themes";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,7 +18,7 @@ const geistMono = Geist_Mono({
 
 
 export const metadata = {
-  title: "Pet Adoption | Find Your Best Friend", // এখানে আপনার পছন্দের টাইটেল দিন
+  title: "Pet Adoption | Find Your Best Friend",
   description: "A premium platform to adopt and rehome your pets.",
 };
 export default function RootLayout({ children }) {
@@ -28,7 +29,11 @@ export default function RootLayout({ children }) {
     >
       <body className="min-h-full flex flex-col">
         <Navbar />
-        {children}
+
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+          {children}
+        </ThemeProvider>
+       
         <ToastContainer position="top-right" autoClose={3000} theme="light" />
         <Footer />
       </body>
