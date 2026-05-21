@@ -139,8 +139,20 @@ return (
               </button>
             </Link>
           </div>
+
+
+
+
+    
         </motion.div>
       ))}
+    </div>
+    <div className="flex justify-center mt-12">
+      <Link href="/all-pets">
+        <button className="px-8 py-4 bg-transparent border border-emerald-500/50 hover:bg-emerald-500/10 text-emerald-400 font-bold uppercase tracking-widest text-sm rounded-xl transition-all">
+          View All Pets
+        </button>
+      </Link>
     </div>
   </section>
 );
