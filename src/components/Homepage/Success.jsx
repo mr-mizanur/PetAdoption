@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import React from "react";
 import { motion } from "framer-motion";
 import { FaQuoteLeft } from "react-icons/fa";
@@ -47,6 +46,7 @@ const SuccessStories = () => {
         viewport={{ once: true, margin: "-100px" }}
         className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8"
       >
+   
         <motion.div
           variants={cardVariants}
           whileHover={{ y: -6, borderColor: "rgba(52, 211, 153, 0.2)" }}
@@ -56,19 +56,9 @@ const SuccessStories = () => {
             <FaQuoteLeft />
           </div>
 
-          <div className="flex items-center gap-4">
-            <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-white/10 group-hover:border-emerald-500/40 transition-colors">
-              <Image
-                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150"
-                alt="Handler 01"
-                fill
-                className="object-cover"
-              />
-            </div>
-            <div>
-              <h4 className="font-extrabold text-white tracking-tight group-hover:text-emerald-400 transition-colors">Elena Vance</h4>
-              <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mt-0.5">Sanctuary Alpha</p>
-            </div>
+          <div>
+            <h4 className="font-extrabold text-white tracking-tight group-hover:text-emerald-400 transition-colors">Elena Vance</h4>
+            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mt-0.5">Sanctuary Alpha</p>
           </div>
 
           <p className="mt-6 text-slate-400 text-sm leading-relaxed italic">
@@ -76,6 +66,7 @@ const SuccessStories = () => {
           </p>
         </motion.div>
 
+       
         <motion.div
           variants={cardVariants}
           whileHover={{ y: -6, borderColor: "rgba(45, 212, 191, 0.2)" }}
@@ -85,19 +76,9 @@ const SuccessStories = () => {
             <FaQuoteLeft />
           </div>
 
-          <div className="flex items-center gap-4">
-            <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-white/10 group-hover:border-teal-500/40 transition-colors">
-              <Image
-                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150"
-                alt="Handler 02"
-                fill
-                className="object-cover"
-              />
-            </div>
-            <div>
-              <h4 className="font-extrabold text-white tracking-tight group-hover:text-teal-400 transition-colors">Marcus Brody</h4>
-              <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mt-0.5">Core Vector Node</p>
-            </div>
+          <div>
+            <h4 className="font-extrabold text-white tracking-tight group-hover:text-teal-400 transition-colors">Marcus Brody</h4>
+            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mt-0.5">Core Vector Node</p>
           </div>
 
           <p className="mt-6 text-slate-400 text-sm leading-relaxed italic">
@@ -105,6 +86,7 @@ const SuccessStories = () => {
           </p>
         </motion.div>
 
+       
         <motion.div
           variants={cardVariants}
           whileHover={{ y: -6, borderColor: "rgba(34, 211, 238, 0.2)" }}
@@ -114,19 +96,9 @@ const SuccessStories = () => {
             <FaQuoteLeft />
           </div>
 
-          <div className="flex items-center gap-4">
-            <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-white/10 group-hover:border-cyan-500/40 transition-colors">
-              <Image
-                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150"
-                alt="Handler 03"
-                fill
-                className="object-cover"
-              />
-            </div>
-            <div>
-              <h4 className="font-extrabold text-white tracking-tight group-hover:text-cyan-400 transition-colors">Nadia Sterling</h4>
-              <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mt-0.5">Lifestyle Sync Mod</p>
-            </div>
+          <div>
+            <h4 className="font-extrabold text-white tracking-tight group-hover:text-cyan-400 transition-colors">Nadia Sterling</h4>
+            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mt-0.5">Lifestyle Sync Mod</p>
           </div>
 
           <p className="mt-6 text-slate-400 text-sm leading-relaxed italic">
