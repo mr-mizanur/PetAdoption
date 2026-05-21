@@ -52,7 +52,7 @@ const AddPetPage = () => {
       });
 
       if (res.ok) {
-        showNotification("Companion registry data initialized successfully! Node updated. 🎉", "success");
+        showNotification("Companion registry data initialized successfully! Node updated. ", "success");
         e.target.reset();
         
         setTimeout(() => {
